@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance with Auto Location</title>
+  <script>
+    function submitForm() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude.toFixed(6);
+          const lng = position.coords.longitude.toFixed(6);
+          const name = document.getElementById("name").value;
+          const type = document.getElementById("type").value;
+
+          // Your actual form's submission URL
+          const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfICmKqPqdzzYF7PortRot3wghLF3MozpgvI2AZbQj-7JlRSg/formResponse";
+
+          const fullUrl = `${formUrl}?entry.1389892736=${encodeURIComponent(name)}&entry.1115625297=${encodeURIComponent(type)}&entry.1555280360=${encodeURIComponent(lat + ',' + lng)}`;
+
+          fetch(fullUrl, {
+            method: 'POST',
+            mode: 'no-cors'
+          });
+
+          alert("Attendance submitted with location!");
+        }, function(error) {
+          alert("Location permission denied. Please enable GPS.");
+        });
+      } else {
+        alert("Geolocation not supported on this device.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h2>Attendance Form</h2>
+  <label>Your Name:
+    <input type="text" id="name" placeholder="Enter your name">
+  </label><br><br>
+
+  <label>Attendance Type:
+    <select id="type">
+      <option value="CHECK IN">CHECK IN</option>
+      <option value="CHECK OUT">CHECK OUT</option>
+    </select>
+  </label><br><br>
+
+  <button onclick="submitForm()">Submit with Location</button>
+</body>
+</html>
